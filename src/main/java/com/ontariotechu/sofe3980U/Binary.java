@@ -38,10 +38,12 @@ public class Binary
 		// If all digits are '0', ensure number is "0"
 		this.number = (beg == number.length()) ? "0" : number.substring(beg);
 	
-		// Ensure empty strings are replaced with "0"
-		if (this.number.isEmpty()) {
+		// uncomment the following code
+		
+		if (this.number.isEmpty()) { // replace empty strings with a single zero
 			this.number = "0";
 		}
+  		
 	}
 	/**
 	* Return the binary value of the variable
@@ -85,5 +87,123 @@ public class Binary
 		Binary result=new Binary(num3);  // create a binary object with the calculated value.
 		return result;
 		
+	}
+	/**
+	* Performing bitwise logical OR operation over two binary variables.
+	*
+	* @param num1 The first operand object
+	* @param num2 The second operand object
+	* @return A binary variable with the result of <i>num1 OR num2</i>.
+	*/
+	public static Binary or(Binary num1, Binary num2)
+	{
+		// Pad the shorter number with leading zeros to match lengths
+		String bin1 = num1.number;
+		String bin2 = num2.number;
+		
+		int maxLen = Math.max(bin1.length(), bin2.length());
+		
+		// Pad with leading zeros
+		while (bin1.length() < maxLen) {
+			bin1 = "0" + bin1;
+		}
+		while (bin2.length() < maxLen) {
+			bin2 = "0" + bin2;
+		}
+		
+		String result = "";
+		for (int i = 0; i < maxLen; i++) {
+			char bit1 = bin1.charAt(i);
+			char bit2 = bin2.charAt(i);
+			
+			// OR operation: result is '1' if either bit is '1'
+			if (bit1 == '1' || bit2 == '1') {
+				result += "1";
+			} else {
+				result += "0";
+			}
+		}
+		
+		Binary orResult = new Binary(result);
+		return orResult;
+	}
+	
+	/**
+	* Performing bitwise logical AND operation over two binary variables.
+	*
+	* @param num1 The first operand object
+	* @param num2 The second operand object
+	* @return A binary variable with the result of <i>num1 AND num2</i>.
+	*/
+	public static Binary and(Binary num1, Binary num2)
+	{
+		// Pad the shorter number with leading zeros to match lengths
+		String bin1 = num1.number;
+		String bin2 = num2.number;
+		
+		int maxLen = Math.max(bin1.length(), bin2.length());
+		
+		// Pad with leading zeros
+		while (bin1.length() < maxLen) {
+			bin1 = "0" + bin1;
+		}
+		while (bin2.length() < maxLen) {
+			bin2 = "0" + bin2;
+		}
+		
+		String result = "";
+		for (int i = 0; i < maxLen; i++) {
+			char bit1 = bin1.charAt(i);
+			char bit2 = bin2.charAt(i);
+			
+			// AND operation: result is '1' only if both bits are '1'
+			if (bit1 == '1' && bit2 == '1') {
+				result += "1";
+			} else {
+				result += "0";
+			}
+		}
+		
+		Binary andResult = new Binary(result);
+		return andResult;
+	}
+	
+	/**
+	* Multiply two binary variables. Uses the add function to perform multiplication
+	* through repeated addition.
+	*
+	* @param num1 The first operand (multiplicand)
+	* @param num2 The second operand (multiplier)
+	* @return A binary variable with the result of <i>num1 * num2</i>.
+	*/
+	public static Binary multiply(Binary num1, Binary num2)
+	{
+		Binary result = new Binary("0");
+		
+		// Handle edge case: if either number is 0, result is 0
+		if (num1.number.equals("0") || num2.number.equals("0")) {
+			return result;
+		}
+		
+		// Multiply using repeated addition
+		// For each bit position in num2, if bit is 1, add num1 shifted by that position
+		String bin2 = num2.number;
+		int powerOfTwo = 0;
+		
+		// Process bits from right to left
+		for (int i = bin2.length() - 1; i >= 0; i--) {
+			if (bin2.charAt(i) == '1') {
+				// Shift num1 left by powerOfTwo positions (add powerOfTwo zeros to the right)
+				String shiftedNum1 = num1.number;
+				for (int j = 0; j < powerOfTwo; j++) {
+					shiftedNum1 += "0";
+				}
+				Binary shiftedBinary = new Binary(shiftedNum1);
+				result = add(result, shiftedBinary);
+			}
+			powerOfTwo++;
+		}
+		
+		return result;
 	}
 }	
